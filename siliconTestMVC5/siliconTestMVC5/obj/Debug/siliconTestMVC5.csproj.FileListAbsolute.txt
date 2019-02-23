@@ -216,3 +216,5 @@ C:\repo\sil\siliconTestMVC5\siliconTestMVC5\obj\Debug\siliconTestMVC5.csproj.Cor
 C:\repo\sil\siliconTestMVC5\siliconTestMVC5\obj\Debug\siliconTestMVC5.csproj.CopyComplete
 C:\repo\sil\siliconTestMVC5\siliconTestMVC5\obj\Debug\siliconTestMVC5.dll
 C:\repo\sil\siliconTestMVC5\siliconTestMVC5\obj\Debug\siliconTestMVC5.pdb
+C:\repo\sil\siliconTestMVC5\siliconTestMVC5\bin\X.PagedList.dll
+C:\repo\sil\siliconTestMVC5\siliconTestMVC5\bin\X.PagedList.Mvc.dll
