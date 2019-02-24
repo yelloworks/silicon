@@ -8,7 +8,7 @@ namespace siliconTestMVC5.Models
 {
     public class ViewCategoriesModel
     {
-        public int ChildredCount { get; set; }
+        public int ChildrenCount { get; set; }
         public Category Item { get; set; }
     }
 }

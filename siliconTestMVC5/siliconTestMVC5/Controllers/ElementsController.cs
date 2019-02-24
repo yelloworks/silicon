@@ -18,7 +18,7 @@ namespace siliconTestMVC5.Controllers
             var context = new ApplicationDbContext();
            // List<Category> categories = context.Categories.ToList(); //returns IQueryable<Product> representing an unknown number of products. a thousand maybe?
 
-           var categories =  context.Categories.Select(p => new ViewCategoriesModel { Item = p, ChildredCount = p.Products.Count() }).ToList();
+           var categories =  context.Categories.Select(p => new ViewCategoriesModel { Item = p, ChildrenCount = p.Products.Count() }).ToList();
 
 
 

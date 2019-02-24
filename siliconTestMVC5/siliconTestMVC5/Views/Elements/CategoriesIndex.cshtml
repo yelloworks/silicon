@@ -6,28 +6,41 @@
 
 <!-- import the included stylesheet for some (very basic) default styling -->
 <link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/output-table-stiles.css" rel="stylesheet" type="text/css" />
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/Scripts/CategoriesHelp.js")
+
+
 
 <!-- loop through each of your products and display it however you want. we're just printing the name here -->
-<h2>List of Products</h2>
-<div class="container">
-    <div class="row">
-        <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            One of three columns
-        </div>
-    </div>
-</div>
-<ul>
+<h2>Categories</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Products Count</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
     @foreach (var product in ViewBag.OnePageOfProducts)
     {
-        <li><div>@product.Item.Name   </div><div>  @product.ChildredCount</div></li>
+        <tr>
+            <td>@product.Item.Name</td>
+            <td>@product.ChildrenCount</td>
+            <td>
+                <div class="popup" id=@product.Item.Name onclick="ShowPopup(document.getElementById(id).firstChild)"><span class="popuptext">@product.Item.Description</span></div>              
+                <script>
+                    var string = CutString("@product.Item.Description.ToString()");
+                    $(@product.Item.Name).append(string);
+                </script>
+            </td>
+            <td></td>
+        </tr>
     }
-</ul>
+
+</table>
+
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
 @Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("CategoriesIndex", new { page }))
