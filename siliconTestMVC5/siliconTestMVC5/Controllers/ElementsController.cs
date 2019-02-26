@@ -42,5 +42,8 @@ namespace siliconTestMVC5.Controllers
             ViewBag.OnePageOfProducts = onePageOfProducts;
             return View();
         }
+
+        
+
     }
 }
