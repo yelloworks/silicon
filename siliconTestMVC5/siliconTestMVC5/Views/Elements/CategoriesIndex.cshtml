@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Product Listing";
+}
+@using X.PagedList.Mvc; //import this so we get our HTML Helper
+@using X.PagedList; //import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)
+
+<!-- import the included stylesheet for some (very basic) default styling -->
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/output-table-stiles.css" rel="stylesheet" type="text/css" />
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/Scripts/CategoriesHelp.js")
+
+
+
+<!-- loop through each of your products and display it however you want. we're just printing the name here -->
+<h2>Categories</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Products Count</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var product in ViewBag.OnePageOfProducts)
+    {
+        <tr>
+            <td>@product.Item.Name</td>
+            <td>@product.ChildrenCount</td>
+            <td>
+                <div class="popup" id=@product.Item.Name onclick="ShowPopup(document.getElementById(id).firstChild)"><span class="popuptext">@product.Item.Description</span></div>              
+                <script>
+                    var string = CutString("@product.Item.Description.ToString()");
+                    $(@product.Item.Name).append(string);
+                </script>
+            </td>
+            <td></td>
+        </tr>
+    }
+
+</table>
+
+
+<!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("CategoriesIndex", new { page }))

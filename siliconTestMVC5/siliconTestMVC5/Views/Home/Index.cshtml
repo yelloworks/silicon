@@ -13,8 +13,8 @@
     @{
         if (!ViewBag.GuestUser)
         {
-            <input type="button" class="btn btn-info" value="Категории" onclick="location.href = '@Url.Action("Category", "Home")'" />
-            <input type="button" class="btn btn-info" value="Товары" onclick="location.href = '@Url.Action("Product", "Home")'" />
+            <input type="button" class="btn btn-info" value="Категории" onclick="location.href = '@Url.Action("CategoriesIndex", "Elements")'" />
+            <input type="button" class="btn btn-info" value="Товары" onclick="location.href = '@Url.Action("ProductsIndex", "Elements")'" />
         }
     }
 </div>
