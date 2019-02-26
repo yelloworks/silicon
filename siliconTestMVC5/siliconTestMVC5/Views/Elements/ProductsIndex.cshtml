@@ -1,18 +1,16 @@
 ﻿@{
     ViewBag.Title = "Product Listing";
 }
-@using X.PagedList.Mvc; //import this so we get our HTML Helper
-@using X.PagedList; //import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)
+@using X.PagedList.Mvc; 
+@using X.PagedList;
 
 <!-- import the included stylesheet for some (very basic) default styling -->
-<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link href="~/Content/output-table-stiles.css" rel="stylesheet" type="text/css" />
 
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/Scripts/CategoriesHelp.js")
-
-
 
 <!-- loop through each of your products and display it however you want. we're just printing the name here -->
 <h2>Products</h2>
@@ -22,6 +20,7 @@
         <th>Description</th>
         <th>Price</th>
         <th>Count</th>
+        <th>Image</th>
     </tr>
     @foreach (var product in ViewBag.OnePageOfProducts)
     {
@@ -30,14 +29,15 @@
         <td>@product.Description</td>
         <td>@product.Price</td>
         <td>@product.Count</td>
-        @*<td>
-            <div class="popup" id=@product.Item.Name onclick="ShowPopup(document.getElementById(id).firstChild)"><span class="popuptext">@product.Item.Description</span></div>
-            <script>
-                var string = CutString("@product.Item.Description.ToString()");
-                $(@product.Item.Name).append(string);
-            </script>
-        </td>*@
-        <td></td>
+
+        @{var imgSrc = @Url.Content("~/images/box.png");}
+        @if (@product.Image != null)
+        {
+            var base64 = Convert.ToBase64String(@product.Image);
+            imgSrc = String.Format("data:image/png;base64,{0}", base64);
+        }
+
+        <td><img src="@imgSrc" width="100" height="100"></td>
     </tr>
     }
 
@@ -45,4 +45,4 @@
 
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("CategoriesIndex", new { page }))
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page }))
