@@ -28,21 +28,22 @@ namespace siliconTestMVC5.Controllers
             return View();
         }
 
-        public object ProductsIndex(int? page)
+        public object ProductsIndex(int? page, int? itemsCount)
         {
-            int pagesInList = 10;
+            int pagesInList = itemsCount ?? 10; 
+            var pageNumber = page ?? 1;
 
             var products = context.Products.ToList<Product>();
 
-
-            var pageNumber = page ?? 1;
             var onePageOfProducts = products.ToPagedList(pageNumber, pagesInList);
 
+            ViewBag.SelectedList = new SelectList(new[] {10, 25, 50, 100});
+            ViewBag.ItemsCount = pagesInList;
+            ViewBag.CurrentPage = page;
             ViewBag.OnePageOfProducts = onePageOfProducts;
+
             return View();
         }
-
-        
 
     }
 }

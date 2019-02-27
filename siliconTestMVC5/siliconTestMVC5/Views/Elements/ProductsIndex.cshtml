@@ -5,6 +5,7 @@
 @using X.PagedList;
 
 <!-- import the included stylesheet for some (very basic) default styling -->
+<style type="text/css">.selector { }</style>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link href="~/Content/output-table-stiles.css" rel="stylesheet" type="text/css" />
 
@@ -14,6 +15,25 @@
 
 <!-- loop through each of your products and display it however you want. we're just printing the name here -->
 <h2>Products</h2>
+@{ int a = 0;}
+@Html.DropDownList("value", ViewBag.SelectedList as SelectList, new {onchange = @Url.Action("ProductsIndex", new { ViewBag.CurrentPage, ViewBag.ItemsCount })})
+@*<script>
+    $(document).ready(function () {
+        $(".selector").change(function () {
+
+            var a = $(".selector").val();
+            alert($(".selector").val());
+            @Url.Action("ProductsIndex", new { ViewBag.CurrentPage, });
+        });
+    });
+</script>*@
+
+<script>
+    function TryTo() {
+        alert("ddddddd");
+    };
+</script>
+
 <table>
     <tr>
         <th>Name</th>
@@ -42,7 +62,7 @@
     }
 
 </table>
-
+<>
 
 <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page }))
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page, ViewBag.ItemsCount }))
