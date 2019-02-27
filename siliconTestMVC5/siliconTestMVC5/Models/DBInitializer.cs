@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
@@ -35,9 +36,12 @@ namespace siliconTestMVC5.Models
             context.Categories.AddRange(categories);
             context.SaveChanges();
 
+            byte[] tmpImage = File.ReadAllBytes(HttpContext.Current.Server.MapPath("~/images/plate.png"));
+            
+
             var products = new List<Product>
             {
-                new Product { Name = "Тарелка", CurrentCategoryName = "Посуда", Description = "Это же тарелка", Price = 1, Count = 1},
+                new Product { Name = "Тарелка", CurrentCategoryName = "Посуда", Description = "Это же тарелка", Price = 1, Count = 1, Image = tmpImage},
                 new Product { Name = "Чашка", CurrentCategoryName = "Посуда", Description = "Это же чашка", Price = 1, Count = 2},
                 new Product { Name = "Блюдце", CurrentCategoryName = "Посуда", Description = "Это же Блюдце", Price = 1, Count = 1},
                 new Product { Name = "Ложка", CurrentCategoryName = "Посуда", Description = "Это же Ложка", Price = 1, Count = 2},

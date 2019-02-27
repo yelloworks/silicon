@@ -34,6 +34,7 @@ namespace siliconTestMVC5.Controllers
 
             var products = context.Products.ToList<Product>();
 
+
             var pageNumber = page ?? 1;
             var onePageOfProducts = products.ToPagedList(pageNumber, pagesInList);
 
