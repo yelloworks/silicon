@@ -1,11 +1,11 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Product Listing";
 }
-@using X.PagedList.Mvc; 
+@using X.PagedList.Mvc;
 @using X.PagedList;
 
-<!-- import the included stylesheet for some (very basic) default styling -->
-<style type="text/css">.selector { }</style>
+
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link href="~/Content/output-table-stiles.css" rel="stylesheet" type="text/css" />
 
@@ -13,56 +13,57 @@
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/Scripts/CategoriesHelp.js")
 
-<!-- loop through each of your products and display it however you want. we're just printing the name here -->
-<h2>Products</h2>
-@{ int a = 0;}
-@Html.DropDownList("value", ViewBag.SelectedList as SelectList, new {onchange = @Url.Action("ProductsIndex", new { ViewBag.CurrentPage, ViewBag.ItemsCount })})
-@*<script>
-    $(document).ready(function () {
-        $(".selector").change(function () {
 
-            var a = $(".selector").val();
-            alert($(".selector").val());
-            @Url.Action("ProductsIndex", new { ViewBag.CurrentPage, });
-        });
-    });
-</script>*@
+<h2>Products</h2>
+
+@{ string a = ViewBag.ItemsCount;}
+@Html.DropDownList("select", ViewBag.SelectedList as SelectList, a )
 
 <script>
-    function TryTo() {
-        alert("ddddddd");
-    };
+    $(document).ready(function () {
+        $("#select").change(function () {
+            var a = $("#select").val();
+            var href = "/Elements/ProductsIndex?page=1&ItemsCount=" + a;
+
+            window.location.href = href;
+        });
+    });
+</script>
+
+<script>
+    function orderColumn(columnNumber) {
+        var href = "/Elements/ProductsIndex?sortCase=" + columnNumber;
+        window.location.href = href;
+    }
 </script>
 
 <table>
     <tr>
-        <th>Name</th>
+        <th onclick="orderColumn(1)">Name</th>
         <th>Description</th>
-        <th>Price</th>
-        <th>Count</th>
+        <th onclick="orderColumn(2)">Price</th>
+        <th onclick="orderColumn(3)">Count</th>
         <th>Image</th>
     </tr>
     @foreach (var product in ViewBag.OnePageOfProducts)
     {
-    <tr>
-        <td>@product.Name</td>
-        <td>@product.Description</td>
-        <td>@product.Price</td>
-        <td>@product.Count</td>
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.Description</td>
+            <td>@product.Price</td>
+            <td>@product.Count</td>
 
-        @{var imgSrc = @Url.Content("~/images/box.png");}
-        @if (@product.Image != null)
-        {
-            var base64 = Convert.ToBase64String(@product.Image);
-            imgSrc = String.Format("data:image/png;base64,{0}", base64);
-        }
+            @{var imgSrc = @Url.Content("~/images/box.png");}
+            @if (@product.Image != null)
+            {
+                var base64 = Convert.ToBase64String(@product.Image);
+                imgSrc = String.Format("data:image/png;base64,{0}", base64);
+            }
 
-        <td><img src="@imgSrc" width="100" height="100"></td>
-    </tr>
+            <td><img src="@imgSrc" width="100" height="100"></td>
+        </tr>
     }
 
 </table>
-<>
 
-<!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page, ViewBag.ItemsCount }))
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page }))
