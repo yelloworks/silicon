@@ -14,18 +14,15 @@ namespace siliconTestMVC5.Controllers
     {
         readonly ApplicationDbContext _context = new ApplicationDbContext();
         private static int _itemsInView = 10;
-        private static int _lastOrdered = 0;
 
         // GET: Elements
         public object CategoriesIndex(int? page)
         {
+            var categories = _context.Categories
+                .Select(p => new ViewCategoriesModel {Item = p, ChildrenCount = p.Products.Count()}).ToList();
 
-           // List<Category> categories = context.Categories.ToList(); //returns IQueryable<Product> representing an unknown number of products. a thousand maybe?
-
-           var categories =  _context.Categories.Select(p => new ViewCategoriesModel { Item = p, ChildrenCount = p.Products.Count() }).ToList();
-
-            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
-            var onePageOfProducts = categories.ToPagedList(pageNumber, 10); // will only contain 25 products max because of the pageSize
+            var pageNumber = page ?? 1;
+            var onePageOfProducts = categories.ToPagedList(pageNumber, 10);
 
             ViewBag.OnePageOfProducts = onePageOfProducts;
             return View();
@@ -34,6 +31,7 @@ namespace siliconTestMVC5.Controllers
         public object ProductsIndex(int? page, int? itemsCount, int? sortCase)
         {
 
+            sortCase = sortCase ?? 0;
             _itemsInView = itemsCount ?? _itemsInView; 
             var pageNumber = page ?? 1;
 
@@ -41,12 +39,16 @@ namespace siliconTestMVC5.Controllers
 
             var onePageOfProducts = products.ToPagedList(pageNumber, _itemsInView);
 
-            ViewBag.SelectedList = new SelectList(new[] {10, 25, 50, 100});
+            var categories = new SelectList(_context.Categories.ToList(), "Name", "Name");
+            
+
+            ViewBag.SelectedList = new SelectList(new[] {10, 25, 50, 100}, itemsCount);
+            ViewBag.SortStatus = sortCase;
             ViewBag.ItemsCount = _itemsInView.ToString();
             ViewBag.CurrentPage = page;
             ViewBag.OnePageOfProducts = onePageOfProducts;
 
-            return View();
+            return View(categories);
         }
 
 
@@ -54,33 +56,19 @@ namespace siliconTestMVC5.Controllers
         {
             switch (caseType)
             {
-                case 1:
-                    if (_lastOrdered == 0 || _lastOrdered != 1)
-                    {
-                        _lastOrdered = 1;
-                        return items.OrderBy(p => p.Name).ToList();
-                    }
-                    _lastOrdered = 0;
+                case 10:
+                    return items.OrderBy(p => p.Name).ToList();
+                case 11:
                     return items.OrderByDescending(p => p.Name).ToList();
-                case 2:
-                    if (_lastOrdered == 0 || _lastOrdered != 2)
-                    {
-                        _lastOrdered = 2;
-                        return items.OrderBy(p => p.Price).ToList();
-                    }
-                    _lastOrdered = 2;
+                case 20:
+                    return items.OrderBy(p => p.Price).ToList();
+                case 21:
                     return items.OrderByDescending(p => p.Price).ToList();
-                case 3:
-                    if (_lastOrdered == 0 || _lastOrdered != 3)
-                    {
-                        _lastOrdered = 3;
-                        return items.OrderBy(p => p.Count).ToList();
-                    }
-                    _lastOrdered = 3;
+                case 30:
+                    return items.OrderBy(p => p.Count).ToList();
+                case 31:
                     return items.OrderByDescending(p => p.Count).ToList();
                 default:
-                    
-                    _lastOrdered = 0;
                     return items;
             }
         }

@@ -1,4 +1,4 @@
-﻿
+﻿@model  IEnumerable<siliconTestMVC5.Models.Entities.Category>
 @{
     ViewBag.Title = "Product Listing";
 }
@@ -16,15 +16,14 @@
 
 <h2>Products</h2>
 
-@{ string a = ViewBag.ItemsCount;}
-@Html.DropDownList("select", ViewBag.SelectedList as SelectList, a )
+@Html.DropDownList("select", ViewBag.SelectedList as SelectList)
+@Html.DropDownList("tmpValue", new SelectList(Model, "Name", "Name"), "--Select a State--")
 
 <script>
     $(document).ready(function () {
         $("#select").change(function () {
             var a = $("#select").val();
-            var href = "/Elements/ProductsIndex?page=1&ItemsCount=" + a;
-
+            var href = "/Elements/ProductsIndex?page=1&itemsCount=" + a + "&sortCase=" + @ViewBag.SortStatus;
             window.location.href = href;
         });
     });
@@ -32,7 +31,16 @@
 
 <script>
     function orderColumn(columnNumber) {
-        var href = "/Elements/ProductsIndex?sortCase=" + columnNumber;
+        var currentStat = @ViewBag.SortStatus;
+        var href = "/Elements/ProductsIndex?sortCase=" + (columnNumber * 10) + "&itemsCount=" + @ViewBag.ItemsCount;
+        if (currentStat !== 0) {
+            var chars = currentStat.toString().split('');
+            if (chars[0] == columnNumber) {
+                var sortType = !+parseInt(chars[1]);
+                var outSort = columnNumber * 10 + sortType;
+                href = "/Elements/ProductsIndex?sortCase=" + outSort + "&itemsCount=" + @ViewBag.ItemsCount;
+            }
+        }
         window.location.href = href;
     }
 </script>
@@ -66,4 +74,4 @@
 
 </table>
 
-@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page }))
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action("ProductsIndex", new { page, sortCase = @ViewBag.SortStatus, itemsCount = @ViewBag.ItemsCount }))
