@@ -28,27 +28,40 @@ namespace siliconTestMVC5.Controllers
             return View();
         }
 
-        public object ProductsIndex(int? page, int? itemsCount, int? sortCase)
+        public object ProductsIndex(int? page, int? itemsCount, int? sortCase, string filter)
         {
 
             sortCase = sortCase ?? 0;
             _itemsInView = itemsCount ?? _itemsInView; 
             var pageNumber = page ?? 1;
 
-            var products = Order(_context.Products.ToList<Product>(), sortCase);
+            List<Product> products;
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                 products = Order(_context.Products.Where(p => p.CurrentCategoryName == filter).ToList(), sortCase);
+            }
+            else
+            {
+                 products = Order(_context.Products.ToList<Product>(), sortCase);
+            }
+            
 
             var onePageOfProducts = products.ToPagedList(pageNumber, _itemsInView);
-
-            var categories = new SelectList(_context.Categories.ToList(), "Name", "Name");
+           // var categories = new SelectList(_context.Categories.ToList(), "Name", "Name");
             
 
             ViewBag.SelectedList = new SelectList(new[] {10, 25, 50, 100}, itemsCount);
+           // var a = new SelectList(new[] {10, 25, 50, 100}, itemsCount);
+ 
+
+            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "Name", "Name", filter);
             ViewBag.SortStatus = sortCase;
             ViewBag.ItemsCount = _itemsInView.ToString();
             ViewBag.CurrentPage = page;
             ViewBag.OnePageOfProducts = onePageOfProducts;
 
-            return View(categories);
+            return View();
         }
 
 

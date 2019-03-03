@@ -16,14 +16,21 @@
 
 <h2>Products</h2>
 
-@Html.DropDownList("select", ViewBag.SelectedList as SelectList)
-@Html.DropDownList("tmpValue", new SelectList(Model, "Name", "Name"), "--Select a State--")
+@Html.DropDownList("itemsCount", ViewBag.SelectedList as SelectList)
+@Html.DropDownList("filter",ViewBag.Categories as SelectList, "No filter")
 
 <script>
     $(document).ready(function () {
-        $("#select").change(function () {
-            var a = $("#select").val();
-            var href = "/Elements/ProductsIndex?page=1&itemsCount=" + a + "&sortCase=" + @ViewBag.SortStatus;
+        $("#itemsCount").change(function () {
+            var count = $("#itemsCount").val();
+            var href = "/Elements/ProductsIndex?page=1&itemsCount=" + count + "&sortCase=" + @ViewBag.SortStatus;
+            window.location.href = href;
+        });
+    });
+    $(document).ready(function() {
+        $("#filter").change(function() {
+            var selected = $("#filter").val();
+            var href = "/Elements/ProductsIndex?page=1&itemsCount=" + @ViewBag.ItemsCount + "&sortCase=" + @ViewBag.SortStatus+ "&filter=" + selected;
             window.location.href = href;
         });
     });
